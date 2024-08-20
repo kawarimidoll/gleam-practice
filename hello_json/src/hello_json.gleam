@@ -2,6 +2,10 @@ import gleam/dynamic
 import gleam/io
 import gleam/json.{array, int, null, object, string}
 
+import jasper.{Index, Key, Root, String, parse_json, query_json}
+
+// import ../../../LilyRose2798/jasper
+
 pub type Idol {
   Idol(name: String, age: Int, favorites: Favorites)
 }
@@ -11,6 +15,23 @@ pub type Favorites {
 }
 
 pub fn main() {
+  io.println("Hello from hello_json!")
+  io.println("------")
+  io.println("use gleam_json:")
+  sample_gleam_json()
+  io.println("------")
+  io.println("use jasper")
+  sample_jasper()
+}
+
+fn sample_jasper() {
+  let assert Ok(json) = parse_json("{ \"foo\": [1, true, \"hi\"] }")
+  io.debug(json)
+  let assert Ok(String(str)) = query_json(json, Root |> Key("foo") |> Index(2))
+  io.println(str)
+}
+
+fn sample_gleam_json() {
   let encoded =
     object([
       #("name", string("arisu")),
@@ -21,7 +42,6 @@ pub fn main() {
       ),
     ])
 
-  io.println("Hello from hello_json!")
   io.debug(encoded)
   io.println(json.to_string(encoded))
 
